@@ -1,3 +1,17 @@
+# Whiteboard WebSocket Lab
+
+- Année : M1 iWOCS
+- Matière: WEB
+- TP : n°3
+
+## Auteur(s)
+
+|Nom|Prénom|login|email|
+|--|--|--|--|
+| ??? | ??? | ??? | ???@???.?? |
+
+## Travail à réaliser
+
 Un tableau blanc sur une Web app est une surface sur laquelle les utilisateurs peuvent dessiner. Chaque utilisateur a sa propre couleur et voit en temps réel les dessins des autres utilisateurs dans leur couleur respective.
 
 Un utilisateur doit pouvoir créer un nouveau dessin vierge. Il doit aussi pouvoir  afficher la liste des dessins en cours et participer à ces dessins.
