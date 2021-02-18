@@ -167,3 +167,14 @@ ws.onmessage = (event) => {
     break;
   }
 };
+
+function drawLine(x, y, c) {
+  context.strokeStyle = c;
+  context.beginPath();
+  context.moveTo(x, y);
+  var cercle = new Path2D();
+  cercle.arc(x - canvasBorder.left, y - canvasBorder.top, 10, 0, 2 * Math.PI);
+  context.fillStyle = c;
+  context.fill(cercle);
+  context.closePath();
+}
