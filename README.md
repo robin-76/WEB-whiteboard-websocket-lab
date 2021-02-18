@@ -8,7 +8,7 @@
 
 |Nom|Prénom|login|email|
 |--|--|--|--|
-| ??? | ??? | ??? | ???@???.?? |
+| *Guyomar* | *Robin*| *gr161657* | *robin.guyomar@etu.univ-lehavre.fr* |
 
 ## Travail à réaliser
 
