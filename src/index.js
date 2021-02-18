@@ -42,6 +42,7 @@ ws.onopen = (event) => {
   console.log("We are connected.");
 };
 
+/*
 // Listen to messages coming from the server. When it happens, create a new <li> and append it to the DOM.
 const messages = document.querySelector('#messages');
 let line;
@@ -65,3 +66,21 @@ const sendForm = document.querySelector('form');
 const sendInput = document.querySelector('form input');
 sendForm.addEventListener('submit', sendMessage, true);
 sendForm.addEventListener('blur', sendMessage, true);
+*/
+
+const roomsHTML = document.querySelector('#rooms');
+const buttonHTML = document.querySelector('#button');
+let roomHTML;
+
+var canvas = document.getElementById('canvas');
+var canvasBorder = canvas.getBoundingClientRect();
+var context = canvas.getContext('2d');
+canvas.width = 4 * (window.innerWidth / 5);
+canvas.height = window.innerHeight / 2;
+
+var myRoom = "Bienvenue dans le salon !";
+var myRoomId = 0;
+let rooms = [myRoom];
+var myCoord = [,];
+var previousCoord = [,];
+var mouseDown = false;
