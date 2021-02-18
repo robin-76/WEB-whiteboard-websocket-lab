@@ -6,21 +6,25 @@ var http = require('http'),
 // create a new HTTP server to deal with low level connection details (tcp connections, sockets, http handshakes, etc.)
 var server = http.createServer();
 
-
 // create a WebSocket Server on top of the HTTP server to deal with the WebSocket protocol
 var wss = new WebSocketServer({
   server: server
 });
 
+var rooms = ["Welcome"];
+var points = [[]];
+const roomStr = "Room ";
+
 // create a function to be able do broadcast messages to all WebSocket connected clients
-wss.broadcast = function broadcast(message) {
+wss.broadcast = function broadcast(message, destination) {
+
   wss.clients.forEach(function each(client) {
     client.send(message);
   });
 };
 
 // Register a listener for new connections on the WebSocket.
-wss.on('connection', function(client, request) {
+wss.on('connection', function (client, request) {
 
   // retrieve the name in the cookies
   var cookies = request.headers.cookie.split(';');
@@ -30,24 +34,85 @@ wss.on('connection', function(client, request) {
   wsname = wsname.split('=')[1];
 
   // greet the newly connected user
-  client.send('Welcome, ' + decodeURIComponent(wsname) + '!');
+  client.send(JSON.stringify({
+    "mode": "connection",
+    "tab": points[0],
+    "rooms": rooms
+  }));
 
   // Register a listener on each message of each connection
-  client.on('message', function(message) {
+  client.on('message', function (message) {
 
     var cli = '[' + decodeURIComponent(wsname) + '] ';
-    console.log("message from", cli);
+    //console.log("message from" + cli + " message: " + message);
     // when receiving a message, broadcast it to all the connected clients
-    wss.broadcast(cli + message);
+
+    //console.log("Server Receiving: " + message);
+    var jsonParse = JSON.parse(message);
+
+    let mode = jsonParse.mode;
+    let roomName = jsonParse.roomName;
+    let roomId = jsonParse.roomId;
+
+    switch (mode) {
+      case "draw":
+        //console.log("draw mode");
+
+        let x = jsonParse.x;
+        let y = jsonParse.y;
+        let color = jsonParse.color;
+
+        if (rooms.includes(roomName)) {
+          points[roomId].push([x, y, color]);
+
+          wss.broadcast(JSON.stringify({
+            "x": x,
+            "y": y,
+            "color": color,
+            "mode": mode,
+            "roomName": roomName,
+            "roomId": roomId
+          }));
+        }
+        break;
+      case "create": //on créer un nouvelle room dans le tableau
+        console.log("create mode");
+
+        rooms.push(roomStr + rooms.length);
+        points.push([null, null, null]);
+
+        wss.broadcast(JSON.stringify({
+          "mode": mode,
+          "roomName": rooms[rooms.length - 1],
+          "roomId": rooms.length - 1
+        }));
+
+        break;
+      case "change":
+        console.log("change mode");
+        //envoie un message contenant le dessin de la room que l'on va vider cote client
+
+        console.log("roomId: " + roomId + " roomName:" + roomName);
+
+        if (rooms.includes(roomName)) {
+          let id = rooms.indexOf(roomName);
+          client.send(JSON.stringify({
+            "mode": mode,
+            "roomName": roomName,
+            "roomId": roomId,
+            "tab": points[id]
+          }));
+        }
+        break;
+    }
   });
 });
 
-
 // http sever starts listening on given host and port.
-server.listen(port, host, function() {
+server.listen(port, host, function () {
   console.log('Listening on ' + server.address().address + ':' + server.address().port);
 });
 
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
   process.exit(0);
 });
