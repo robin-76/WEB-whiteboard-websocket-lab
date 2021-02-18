@@ -1,7 +1,7 @@
 var http = require('http'),
-  WebSocketServer = require('ws').Server,
-  port = 1234,
-  host = '0.0.0.0';
+WebSocketServer = require('ws').Server,
+port = 1234,
+host = '0.0.0.0';
 
 // create a new HTTP server to deal with low level connection details (tcp connections, sockets, http handshakes, etc.)
 var server = http.createServer();
@@ -11,9 +11,9 @@ var wss = new WebSocketServer({
   server: server
 });
 
-var rooms = ["Welcome"];
+var rooms = ["Bienvenue"];
 var points = [[]];
-const roomStr = "Room ";
+const roomStr = "Salon ";
 
 // create a function to be able do broadcast messages to all WebSocket connected clients
 wss.broadcast = function broadcast(message, destination) {
@@ -42,7 +42,6 @@ wss.on('connection', function (client, request) {
 
   // Register a listener on each message of each connection
   client.on('message', function (message) {
-
     var cli = '[' + decodeURIComponent(wsname) + '] ';
     //console.log("message from" + cli + " message: " + message);
     // when receiving a message, broadcast it to all the connected clients
@@ -56,54 +55,52 @@ wss.on('connection', function (client, request) {
 
     switch (mode) {
       case "draw":
-        //console.log("draw mode");
+      let x = jsonParse.x;
+      let y = jsonParse.y;
+      let color = jsonParse.color;
 
-        let x = jsonParse.x;
-        let y = jsonParse.y;
-        let color = jsonParse.color;
-
-        if (rooms.includes(roomName)) {
-          points[roomId].push([x, y, color]);
-
-          wss.broadcast(JSON.stringify({
-            "x": x,
-            "y": y,
-            "color": color,
-            "mode": mode,
-            "roomName": roomName,
-            "roomId": roomId
-          }));
-        }
-        break;
-      case "create": //on créer un nouvelle room dans le tableau
-        console.log("create mode");
-
-        rooms.push(roomStr + rooms.length);
-        points.push([null, null, null]);
+      if (rooms.includes(roomName)) {
+        points[roomId].push([x, y, color]);
 
         wss.broadcast(JSON.stringify({
+          "x": x,
+          "y": y,
+          "color": color,
           "mode": mode,
-          "roomName": rooms[rooms.length - 1],
-          "roomId": rooms.length - 1
+          "roomName": roomName,
+          "roomId": roomId
         }));
+      }
+      break;
 
-        break;
+      case "create": //on créer un nouvelle room dans le tableau
+      console.log("create mode");
+
+      rooms.push(roomStr + rooms.length);
+      points.push([null, null, null]);
+
+      wss.broadcast(JSON.stringify({
+        "mode": mode,
+        "roomName": rooms[rooms.length - 1],
+        "roomId": rooms.length - 1
+      }));
+
+      break;
+
       case "change":
-        console.log("change mode");
-        //envoie un message contenant le dessin de la room que l'on va vider cote client
+      console.log("change mode");
+      console.log("roomId : " + roomId + " roomName :" + roomName);
 
-        console.log("roomId: " + roomId + " roomName:" + roomName);
-
-        if (rooms.includes(roomName)) {
-          let id = rooms.indexOf(roomName);
-          client.send(JSON.stringify({
-            "mode": mode,
-            "roomName": roomName,
-            "roomId": roomId,
-            "tab": points[id]
-          }));
-        }
-        break;
+      if (rooms.includes(roomName)) {
+        let id = rooms.indexOf(roomName);
+        client.send(JSON.stringify({
+          "mode": mode,
+          "roomName": roomName,
+          "roomId": roomId,
+          "tab": points[id]
+        }));
+      }
+      break;
     }
   });
 });
