@@ -18,17 +18,17 @@ if (isDef(wsname)) {
   document.cookie = "wsname=" + encodeURIComponent(wsname);
 }
 
-let color = cookies.find(function (c) {
+let wscolor = cookies.find(function (c) {
   if (c.match(/wscolor/) !== null)
   return true;
 
   return false;
 });
-if (isDef(color)) {
-  color = color.split('=')[1];
+if (isDef(wscolor)) {
+  wscolor = wscolor.split('=')[1];
 } else {
-  color = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
-  document.cookie = "color=" + color;
+  wscolor = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+  document.cookie = "wscolor=" + wscolor;
 }
 
 // Set the name in the header
