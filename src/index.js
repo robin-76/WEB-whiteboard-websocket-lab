@@ -1,8 +1,8 @@
 import './index.css';
 import nameGenerator from './name-generator';
 import isDef from './is-def';
-  
-  
+
+
 
 // Store/retrieve the name in/from a cookie.
 const cookies = document.cookie.split(';');
@@ -16,6 +16,19 @@ if (isDef(wsname)) {
 } else {
   wsname = nameGenerator();
   document.cookie = "wsname=" + encodeURIComponent(wsname);
+}
+
+let color = cookies.find(function (c) {
+  if (c.match(/wscolor/) !== null)
+  return true;
+
+  return false;
+});
+if (isDef(color)) {
+  color = color.split('=')[1];
+} else {
+  color = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+  document.cookie = "color=" + color;
 }
 
 // Set the name in the header
@@ -52,4 +65,3 @@ const sendForm = document.querySelector('form');
 const sendInput = document.querySelector('form input');
 sendForm.addEventListener('submit', sendMessage, true);
 sendForm.addEventListener('blur', sendMessage, true);
-
