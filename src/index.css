@@ -47,6 +47,7 @@ header p {
 
 #roomTitle {
   text-align: center;
+  font-weight: bold;
   font-size: x-large;
   font-weight: bold;
   margin-bottom: 3%;
@@ -55,7 +56,6 @@ header p {
 #canvas {
   margin-left: 2.5%;
   margin-right: 5%;
-
   background-color: #2e2e2e;
   border:thin solid black;
 }
