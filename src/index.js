@@ -100,3 +100,70 @@ canvas.addEventListener("mousemove", (event) => {
     sendData("draw");
   }
 });
+
+function sendData(mode) {
+  let json = JSON.stringify({
+    "x": myCoord[0],
+    "y": myCoord[1],
+    "color": wscolor,
+    "mode": mode,
+    "roomName": myRoom,
+    "roomId": myRoomId
+  });
+
+  ws.send(json);
+}
+
+ws.onmessage = (event) => {
+  var jsonParse = JSON.parse(event.data);
+
+  let mode = jsonParse.mode;
+  let roomName = jsonParse.roomName;
+  let roomId = jsonParse.roomId;
+  let draw;
+  switch (mode) {
+
+    case "draw":
+    let x = jsonParse.x;
+    let y = jsonParse.y;
+    let color = jsonParse.color;
+
+    if (roomName === myRoom && roomId === myRoomId) {
+      drawLine(x, y, color);
+    }
+    break;
+
+    case "create":
+    console.log("create mode");
+    createRoom(roomName, roomId);
+    break;
+
+    case "change":
+    console.log("change mode");
+    draw = jsonParse.tab;
+    for (let i = 0; i < draw.length; i++) {
+      if(draw[i] !== null){
+        drawLine(draw[i][0], draw[i][1], draw[i][2]);
+      }
+    }
+    break;
+
+    case "connection":
+    console.log("connection mode");
+
+    draw = jsonParse.tab;
+    for (let i = 0; i < draw.length; i++) {
+      if (draw[i] !== null) {
+        drawLine(draw[i][0], draw[i][1], draw[i][2]);
+      }
+    }
+
+    let roomAlreadyCreated = jsonParse.rooms;
+    for (let i = 1; i < roomAlreadyCreated.length; i++) {
+      if (roomAlreadyCreated[i] !== null) {
+        createRoom(roomAlreadyCreated[i], i);
+      }
+    }
+    break;
+  }
+};
