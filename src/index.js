@@ -178,3 +178,24 @@ function drawLine(x, y, c) {
   context.fill(cercle);
   context.closePath();
 }
+
+buttonHTML.addEventListener("click", function (event) {
+  sendData("create");
+});
+
+function createRoom(roomName, roomId) {
+  rooms.push(roomName);
+  roomHTML = document.createElement("option");
+  roomHTML.textContent = roomName;
+  roomHTML.id = roomId;
+  roomsHTML.appendChild(roomHTML);
+  console.log("New room created : " + roomHTML.textContent + " id : " + roomHTML.id)
+}
+
+roomsHTML.addEventListener("change", function (event) {
+  context.fillStyle = '#2e2e2e';
+  context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+  myRoom = roomsHTML.value;
+  myRoomId = rooms.indexOf(myRoom);
+  sendData("change");
+});
