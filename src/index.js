@@ -84,3 +84,19 @@ let rooms = [myRoom];
 var myCoord = [,];
 var previousCoord = [,];
 var mouseDown = false;
+
+canvas.addEventListener("mousedown", (event) => {
+  mouseDown = true;
+});
+
+canvas.addEventListener("mouseup", (event) => {
+  mouseDown = false;
+});
+
+canvas.addEventListener("mousemove", (event) => {
+  if (mouseDown) {
+    myCoord[0] = event.clientX;
+    myCoord[1] = event.clientY;
+    sendData("draw");
+  }
+});
