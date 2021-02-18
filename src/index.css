@@ -62,11 +62,20 @@ header p {
 }
 
 #buttonDiv {
-  font-size: larger;
+  font-size: 50px;
   margin-top: 2%;
   margin-left: 45%;
 }
 
+#button {
+  background-color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
+
 #rooms {
+  background-color: white;
+  font-weight: bold;
+  font-size: 20px;
   margin-left: 2%;
 }
